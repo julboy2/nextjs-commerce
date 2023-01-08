@@ -32,14 +32,18 @@ The `pages/api` directory is mapped to `/api/*`. Files in this directory are tre
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Learn More
+## Learn More Modules
+DB
+https://planetscale.com/
 
-To learn more about Next.js, take a look at the following resources:
+DB NAME : commerce_database
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+튜토리얼
+https://docs.planetscale.com/docs/tutorials/planetscale-quick-start-guide
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+
+
+
 
 ## Deploy on Vercel
 
