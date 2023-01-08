@@ -8,6 +8,18 @@ First, run the development server:
 npm run dev
 # or
 yarn dev
+
+
+formatting 관련
+- eslint
+- prettier 
+   yarn add -D prettier
+
+
+  prettier  설정
+  .prettierignore 파일 root 에 생성
+  .prettierrc  파일 root 에 생성
+
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
