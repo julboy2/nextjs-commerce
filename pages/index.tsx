@@ -8,11 +8,19 @@ import { useEffect, useRef, useState } from 'react'
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
-  const [products, setProducts] = useState<
-    { id: string; properties: { id: string }[] }[]
-  >([])
+  // const [products, setProducts] = useState<
+  //   { id: string; properties: { id: string }[] }[]
+  // >([])
+  const [products, setProducts] = useState<{ id: string; name: string[] }[]>([])
+
+  // useEffect(() => {
+  //   fetch(`/api/get-items`)
+  //     .then((res) => res.json())
+  //     .then((data) => setProducts(data.items))
+  // }, [])
+
   useEffect(() => {
-    fetch(`/api/get-items`)
+    fetch(`/api/get-products`)
       .then((res) => res.json())
       .then((data) => setProducts(data.items))
   }, [])
@@ -44,9 +52,15 @@ export default function Home() {
           <button onClick={handleClick}>Add Jacket</button>
           <br />
           <input type="text" ref={inputRef} placeholder="name" />
-          <div>
+        </div>
+        <div>
+          <>
             <p>Product List</p>
+            <br />
             {products &&
+              products.map((item) => <div key={item.id}>{item.name}</div>)}
+
+            {/* {products &&
               products.map((item) => (
                 <div key={item.id}>
                   {JSON.stringify(item)}
@@ -69,8 +83,8 @@ export default function Home() {
                   <br />
                   <br />
                 </div>
-              ))}
-          </div>
+              ))} */}
+          </>
         </div>
       </main>
     </>
