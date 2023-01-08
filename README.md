@@ -20,6 +20,15 @@ formatting 관련
   .prettierignore 파일 root 에 생성
   .prettierrc  파일 root 에 생성
 
+DB 설치
+yarn add -D prisma
+
+yarn add @prisma/client
+
+yarn prisma init
+
+yarn prisma generate
+
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
