@@ -39,6 +39,10 @@ yarn add -D tailwindcss postcss autoprefixer
 
 yarn tailwindcss init -p
 
+
+Emotion (CSS in JS) : css 를 javascript 로 사용할 수 있는 라이브러리
+
+https://emotion.sh/docs/introduction
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
