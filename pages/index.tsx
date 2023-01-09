@@ -4,6 +4,7 @@ import { Inter } from '@next/font/google'
 import styles from '../styles/Home.module.css'
 import Button from '@components/Button' // tsconfig.json 파일에"@components/*": ["components/*"] 선언해줘서 사용가능
 import { useEffect, useRef, useState } from 'react'
+import { css } from '@emotion/react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -11,7 +12,9 @@ export default function Home() {
   // const [products, setProducts] = useState<
   //   { id: string; properties: { id: string }[] }[]
   // >([])
-  const [products, setProducts] = useState<{ id: string; name: string[] }[]>([])
+  const [products, setProducts] = useState<
+    { id: string; name: string[]; createdAt: string }[]
+  >([])
 
   // useEffect(() => {
   //   fetch(`/api/get-items`)
@@ -43,22 +46,42 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <div className={styles.description}>
+      <main>
+        <div>
           <p>
             Get started by editing&nbsp;
             <code className={styles.code}>pages/index.tsx</code>
           </p>
-          <button onClick={handleClick}>Add Jacket</button>
-          <br />
-          <input type="text" ref={inputRef} placeholder="name" />
+
+          <input
+            type="text"
+            ref={inputRef}
+            placeholder="name"
+            className="placeholder:italic placeholder:text-pink-400 block bg-white w-96 border border-slate-300 rounded-md py-2 pl-3 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+          />
         </div>
+        <button
+          css={css`
+            background-color: hotpink;
+            padding: 16px;
+            border-radius: 8px;
+          `}
+          onClick={handleClick}
+        >
+          Add Jacket
+        </button>
+        <br />
         <div>
           <>
             <p>Product List</p>
             <br />
             {products &&
-              products.map((item) => <div key={item.id}>{item.name}</div>)}
+              products.map((item) => (
+                <div key={item.id}>
+                  {item.name}
+                  <span>{item.createdAt}</span>
+                </div>
+              ))}
 
             {/* {products &&
               products.map((item) => (
