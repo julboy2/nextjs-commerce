@@ -54,6 +54,10 @@ DB NAME : commerce_database
 https://docs.planetscale.com/docs/tutorials/planetscale-quick-start-guide
 
 
+TailwindCSS
+
+https://tailwindcss.com/docs/guides/nextjs
+
 
 
 
