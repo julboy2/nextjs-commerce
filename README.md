@@ -21,6 +21,9 @@ formatting 관련
   .prettierrc  파일 root 에 생성
 
 DB 설치
+
+prisma 는 Typescript  기반 ORM 이다.
+
 yarn add -D prisma
 
 yarn add @prisma/client
@@ -29,6 +32,31 @@ yarn prisma init
 
 yarn prisma generate
 
+
+Tailwind CSS
+
+yarn add -D tailwindcss postcss autoprefixer
+
+yarn tailwindcss init -p
+
+
+Emotion (CSS in JS) : css 를 javascript 로 사용할 수 있는 라이브러리
+
+https://emotion.sh/docs/introduction
+
+yarn add @emotion/styled @emotion/react
+
+설정
+
+- next.config.js 설정
+
+compiler: {
+    emotion: true,
+  },
+
+- tsconfig.json 설정
+
+"types": ["@emotion/react/types/css-prop"]
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -50,6 +78,10 @@ DB NAME : commerce_database
 튜토리얼
 https://docs.planetscale.com/docs/tutorials/planetscale-quick-start-guide
 
+
+TailwindCSS
+
+https://tailwindcss.com/docs/guides/nextjs
 
 
 
