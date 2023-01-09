@@ -50,7 +50,13 @@ yarn add @emotion/styled @emotion/react
 
 - next.config.js 설정
 
+compiler: {
+    emotion: true,
+  },
+
 - tsconfig.json 설정
+
+"types": ["@emotion/react/types/css-prop"]
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
