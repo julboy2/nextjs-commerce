@@ -21,6 +21,9 @@ formatting 관련
   .prettierrc  파일 root 에 생성
 
 DB 설치
+
+prisma 는 Typescript  기반 ORM 이다.
+
 yarn add -D prisma
 
 yarn add @prisma/client
