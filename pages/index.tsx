@@ -70,6 +70,7 @@ export default function Home() {
         >
           Add Jacket
         </button>
+        <Button onClick={handleClick}>Add Jacket2</Button>
         <br />
         <div>
           <>
