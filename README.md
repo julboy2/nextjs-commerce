@@ -57,6 +57,12 @@ compiler: {
 - tsconfig.json 설정
 
 "types": ["@emotion/react/types/css-prop"]
+
+
+
+yarn add react-image-gallery
+
+
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -82,8 +88,6 @@ https://docs.planetscale.com/docs/tutorials/planetscale-quick-start-guide
 TailwindCSS
 
 https://tailwindcss.com/docs/guides/nextjs
-
-
 
 
 ## Deploy on Vercel
