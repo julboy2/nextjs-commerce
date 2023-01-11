@@ -62,6 +62,9 @@ compiler: {
 
 yarn add react-image-gallery
 
+yadn add -D @types/react-image-gallery
+
+
 
 ```
 
