@@ -85,6 +85,13 @@ siteUrl : [ 블로그 url],
 generateRobotsTxt:grue,
 
 }
+
+
+package.json
+
+script추가
+
+'postbuild' : 'next-sitemap'
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
