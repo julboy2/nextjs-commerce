@@ -22,6 +22,8 @@ formatting 관련
 
 DB 설치
 
+planet scale
+
 prisma 는 Typescript  기반 ORM 이다.
 
 yarn add -D prisma
