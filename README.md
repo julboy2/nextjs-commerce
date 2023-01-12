@@ -74,6 +74,17 @@ next-sitemap
 
 yarn add -D next-sitemap
 
+파일생성
+
+next-sitemap.config.js
+
+module.exports={
+
+siteUrl : [ 블로그 url],
+
+generateRobotsTxt:grue,
+
+}
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
