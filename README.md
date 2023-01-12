@@ -92,6 +92,16 @@ package.json
 script추가
 
 'postbuild' : 'next-sitemap'
+
+
+
+에디터
+
+draft.js 기반 react-draft-wysiwyg 
+
+yarn add draft-js react-draft-wysiwyg
+
+yarn add -D @types/draft-js @types/react-draft-wysiwyg
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
