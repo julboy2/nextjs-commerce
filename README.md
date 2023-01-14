@@ -112,6 +112,20 @@ yarn add -D @types/draft-js @types/react-draft-wysiwyg
 yarn add -D ts-node
 
 
+설정 추가 tsconfig.js
+
+"ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  }
+
+
+실행
+
+yarn ts-node prisma/product.cs // ts-node 뒤에 경로
+
+
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
