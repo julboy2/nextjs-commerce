@@ -116,7 +116,8 @@ yarn add -D ts-node
 
 "ts-node": {
     "compilerOptions": {
-      "module": "CommonJS"
+      "module": "CommonJS",
+      "types": ["node"]
     }
   }
 
