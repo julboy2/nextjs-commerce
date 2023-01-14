@@ -104,6 +104,14 @@ draft.js 기반 react-draft-wysiwyg
 yarn add draft-js react-draft-wysiwyg
 
 yarn add -D @types/draft-js @types/react-draft-wysiwyg
+
+
+
+데이터 임의생성위해
+
+yarn add -D ts-node
+
+
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
