@@ -123,7 +123,7 @@ yarn add -D ts-node
 
 실행
 
-yarn ts-node prisma/product.cs // ts-node 뒤에 경로
+yarn ts-node prisma/product.ts // ts-node 뒤에 경로
 
 
 ```
