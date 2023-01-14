@@ -1,8 +1,10 @@
-import ImageGallery from 'react-image-gallery'
 import Carousel from 'nuka-carousel/lib/carousel'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Head from 'next/head'
+import CustomEditor from '@components/Editor'
+import { useRouter } from 'next/router'
+import { convertFromRaw, convertToRaw, EditorState } from 'draft-js'
 
 const images = [
   {
@@ -41,25 +43,33 @@ const images = [
 
 export default function Products() {
   const [index, setIndex] = useState(0)
-  //   return <ImageGallery items={images} />
+  const router = useRouter()
+  const { id: productId } = router.query
+  const [editorState, setEditorState] = useState<EditorState | undefined>(
+    undefined
+  )
+
+  useEffect(() => {
+    if (productId != null) {
+      fetch(`/api/get-product?id=${productId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          //console.log(data)
+          if (data.items.contents) {
+            setEditorState(
+              EditorState.createWithContent(
+                convertFromRaw(JSON.parse(data.items.contents))
+              )
+            )
+          } else {
+            setEditorState(EditorState.createEmpty())
+          }
+        })
+    }
+  }, [productId])
+
   return (
     <>
-      <Head>
-        <meta property="og:url" content="https://www.naver.com/" />
-        <meta property="og:type" content="article" />
-        <meta
-          property="og:title"
-          content="When Great Minds Don't Think Alike"
-        />
-        <meta
-          property="og:description"
-          content="How much does culture influence createive thinking?"
-        />
-        <meta
-          property="og:image"
-          content="https://picsum.photos/id/1010/1000/600/"
-        />
-      </Head>
       <Carousel
         animation="fade"
         autoplay
@@ -91,6 +101,9 @@ export default function Products() {
           </div>
         ))}
       </div>
+      {editorState != null && (
+        <CustomEditor editorState={editorState} readOnly />
+      )}
     </>
   )
 }
