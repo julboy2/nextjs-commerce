@@ -127,6 +127,16 @@ yarn add -D ts-node
 yarn ts-node prisma/product.ts // ts-node 뒤에 경로
 
 
+
+
+페이징위해설치
+
+yarn add @mantine/core @mantine/hooks
+
+
+https://mantine.dev/core/pagination/
+
+
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
