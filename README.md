@@ -129,9 +129,11 @@ yarn ts-node prisma/product.ts // ts-node 뒤에 경로
 
 
 
-페이징위해설치
+페이징 및 아이콘 컴포넌트 위해설치
 
 yarn add @mantine/core @mantine/hooks
+
+yarn add @tabler/icons
 
 
 https://mantine.dev/core/pagination/
