@@ -1,37 +1,60 @@
 import { products } from '@prisma/client'
 import Image from 'next/image'
 import { useCallback, useEffect, useState } from 'react'
-import { Pagination } from '@mantine/core'
+import { Pagination, SegmentedControl } from '@mantine/core'
 import { CATEGORY_MAP, TAKE } from 'constants/products'
 
 export default function Products() {
   const [activePage, setPage] = useState(1)
   const [total, setTotal] = useState(0)
+  const [categories, setCategories] = useState([])
+  const [selectedCategory, setSelectedCategory] = useState<string>('-1')
   const [products, setProducts] = useState<products[]>([])
 
   useEffect(() => {
-    fetch(`/api/get-products-count`)
+    fetch(`/api/get-categories`)
       .then((res) => res.json())
-      .then((data) => setTotal(Math.ceil(data.items / TAKE)))
-
-    fetch(`/api/get-products?skip=0&take=${TAKE}`)
-      .then((res) => res.json())
-      .then((data) => setProducts(data.items))
+      .then((data) => setCategories(data.items))
   }, [])
 
   useEffect(() => {
+    fetch(`/api/get-products-count?category=${selectedCategory}`)
+      .then((res) => res.json())
+      .then((data) => setTotal(Math.ceil(data.items / TAKE)))
+  }, [selectedCategory])
+
+  useEffect(() => {
     const skip = TAKE * (activePage - 1)
-    fetch(`/api/get-products?skip=${skip}&take=${TAKE}`)
+    fetch(
+      `/api/get-products?skip=${skip}&take=${TAKE}&category=${selectedCategory}`
+    )
       .then((res) => res.json())
       .then((data) => setProducts(data.items))
-  }, [activePage])
+  }, [activePage, selectedCategory])
 
   return (
     <div className="px-32 mt-32 mb-32">
+      {categories && (
+        <div className="mb-4">
+          <SegmentedControl
+            value={selectedCategory}
+            onChange={setSelectedCategory}
+            data={[
+              { label: 'ALL', value: '-1' },
+              ...categories.map((cate) => ({
+                label: cate.name,
+                value: String(cate.id),
+              })),
+            ]}
+            color="dark"
+          />
+        </div>
+      )}
+
       {products && (
         <div className="gird grid-cols-3 gap-3">
           {products.map((item) => (
-            <div key={item.id}>
+            <div key={item.id} style={{ maxWidth: 300 }}>
               <Image
                 className="rounded-2xl"
                 src={item.image_url ?? ''}

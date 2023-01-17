@@ -4,9 +4,16 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-async function getProdutsCount() {
+async function getProdutsCount(category: number) {
+  const where =
+    category && category !== -1
+      ? {
+          where: { category_id: category },
+        }
+      : undefined
+
   try {
-    const response = await prisma.products.count()
+    const response = await prisma.products.count(where)
 
     console.log(response)
     return response
@@ -24,8 +31,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
+  const { category } = req.query
+
   try {
-    const products = await getProdutsCount()
+    const products = await getProdutsCount(Number(category))
     res.status(200).json({ items: products, message: `Success` })
   } catch (error) {
     res.status(400).json({ message: `Failed` })
