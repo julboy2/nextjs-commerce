@@ -1,10 +1,24 @@
+import { getOrderBy } from './../../constants/products'
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client'
+import { stringify } from 'querystring'
 
 const prisma = new PrismaClient()
 
-async function getProduts(skip: number, take: number, category: number) {
+async function getProduts({
+  skip,
+  take,
+  category,
+  orderBy,
+  contains,
+}: {
+  skip: number
+  take: number
+  category: number
+  orderBy: string
+  contains: string
+}) {
   const where =
     category && category !== -1
       ? {
@@ -16,7 +30,7 @@ async function getProduts(skip: number, take: number, category: number) {
       skip,
       take,
       ...where,
-      orderBy: { price: 'asc' },
+      ...getOrderBy(orderBy),
     })
 
     //console.log(response)
@@ -35,7 +49,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const { skip, take, category } = req.query
+  const { skip, take, category, orderBy, contains } = req.query
 
   if (skip == null || take == null) {
     res.status(400).json({ message: 'no skip' })
@@ -43,11 +57,13 @@ export default async function handler(
   }
 
   try {
-    const products = await getProduts(
-      Number(skip),
-      Number(take),
-      Number(category)
-    )
+    const products = await getProduts({
+      skip: Number(skip),
+      take: Number(take),
+      category: Number(category),
+      orderBy: String(orderBy),
+      contains: String(contains),
+    })
     res.status(200).json({ items: products, message: `Success` })
   } catch (error) {
     res.status(400).json({ message: `Failed` })
