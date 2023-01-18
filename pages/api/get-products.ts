@@ -19,18 +19,31 @@ async function getProduts({
   orderBy: string
   contains: string
 }) {
+  const containsCondition =
+    contains && contains !== ''
+      ? {
+          name: { contains: contains },
+        }
+      : undefined
+
   const where =
     category && category !== -1
       ? {
-          where: { category_id: category },
+          category_id: category,
+          ...containsCondition,
         }
+      : containsCondition
+      ? containsCondition
       : undefined
+
+  const orderByCondition = getOrderBy(orderBy)
+
   try {
     const response = await prisma.products.findMany({
       skip,
       take,
-      ...where,
-      ...getOrderBy(orderBy),
+      ...orderByCondition,
+      where: where,
     })
 
     //console.log(response)

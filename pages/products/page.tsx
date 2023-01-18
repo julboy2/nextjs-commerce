@@ -4,17 +4,23 @@ import React, { SetStateAction, useCallback, useEffect, useState } from 'react'
 import { Input, Pagination, SegmentedControl, Select } from '@mantine/core'
 import { CATEGORY_MAP, FILTERS, TAKE } from 'constants/products'
 import { IconSearch } from '@tabler/icons'
+import useDebounce from 'hooks/useDebounce'
+import { useQuery } from '@tanstack/react-query'
 
 export default function Products() {
   const [activePage, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [categories, setCategories] = useState([])
   const [selectedCategory, setSelectedCategory] = useState<string>('-1')
-  const [products, setProducts] = useState<products[]>([])
+  // react-query 사용위해 주석처리
+  //const [products, setProducts] = useState<products[]>([])
   const [selectFilter, setSelectFilter] = useState<string | null>(
     FILTERS[0].value
   )
   const [keyword, setKeyword] = useState('')
+
+  // 검색을 키보드를 칠때가아닌 0.6 초 delay 를 준다
+  const debouncedKeyword = useDebounce<string>(keyword)
 
   useEffect(() => {
     fetch(`/api/get-categories`)
@@ -24,20 +30,44 @@ export default function Products() {
 
   useEffect(() => {
     fetch(
-      `/api/get-products-count?category=${selectedCategory}&contains=${keyword}`
+      `/api/get-products-count?category=${selectedCategory}&contains=${debouncedKeyword}`
     )
       .then((res) => res.json())
       .then((data) => setTotal(Math.ceil(data.items / TAKE)))
-  }, [selectedCategory, keyword])
+  }, [selectedCategory, debouncedKeyword])
 
-  useEffect(() => {
-    const skip = TAKE * (activePage - 1)
-    fetch(
-      `/api/get-products?skip=${skip}&take=${TAKE}&category=${selectedCategory}&orderBy=${selectFilter}&contains=${keyword}`
-    )
-      .then((res) => res.json())
-      .then((data) => setProducts(data.items))
-  }, [activePage, selectedCategory, selectFilter, keyword])
+  // react-query 로 cache 를 사용하기위해 주석처리
+  // useEffect(() => {
+  //   const skip = TAKE * (activePage - 1)
+  //   fetch(
+  //     `/api/get-products?skip=${skip}&take=${TAKE}&category=${selectedCategory}&orderBy=${selectFilter}&contains=${debouncedKeyword}`
+  //   )
+  //     .then((res) => res.json())
+  //     .then((data) => setProducts(data.items))
+  // }, [activePage, selectedCategory, selectFilter, debouncedKeyword])
+
+  // 한번조회했던 값들을 다시 조회하지 않고 사용
+  // 브라우저 네트워크에서 보면 동일한 값으로 호출한/api/get-products 는 다시 호출하지 않는다.
+  const { data: products } = useQuery<
+    { items: products[] },
+    unknown,
+    products[] // prisma 에서 가져옴
+  >(
+    [
+      `/api/get-products?skip=${
+        TAKE * (activePage - 1)
+      }&take=${TAKE}&category=${selectedCategory}&orderBy=${selectFilter}&contains=${debouncedKeyword}`,
+    ],
+    () =>
+      fetch(
+        `/api/get-products?skip=${
+          TAKE * (activePage - 1)
+        }&take=${TAKE}&category=${selectedCategory}&orderBy=${selectFilter}&contains=${debouncedKeyword}`
+      ).then((res) => res.json()),
+    {
+      select: (data) => data.items,
+    }
+  )
 
   const handlerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value)
