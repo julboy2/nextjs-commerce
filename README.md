@@ -139,6 +139,13 @@ yarn add @tabler/icons
 https://mantine.dev/core/pagination/
 
 
+
+React-query 사용
+tanstack
+
+
+yarn add @tanstack/react-query
+
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
