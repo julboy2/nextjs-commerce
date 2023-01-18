@@ -1,4 +1,4 @@
-import { products } from '@prisma/client'
+import { categories, products } from '@prisma/client'
 import Image from 'next/image'
 import React, { SetStateAction, useCallback, useEffect, useState } from 'react'
 import { Input, Pagination, SegmentedControl, Select } from '@mantine/core'
@@ -9,8 +9,9 @@ import { useQuery } from '@tanstack/react-query'
 
 export default function Products() {
   const [activePage, setPage] = useState(1)
-  const [total, setTotal] = useState(0)
-  const [categories, setCategories] = useState([])
+  // react-query 사용위해 주석처리
+  //const [total, setTotal] = useState(0)
+  //const [categories, setCategories] = useState([])
   const [selectedCategory, setSelectedCategory] = useState<string>('-1')
   // react-query 사용위해 주석처리
   //const [products, setProducts] = useState<products[]>([])
@@ -22,19 +23,43 @@ export default function Products() {
   // 검색을 키보드를 칠때가아닌 0.6 초 delay 를 준다
   const debouncedKeyword = useDebounce<string>(keyword)
 
-  useEffect(() => {
-    fetch(`/api/get-categories`)
-      .then((res) => res.json())
-      .then((data) => setCategories(data.items))
-  }, [])
+  // useEffect(() => {
+  //   fetch(`/api/get-categories`)
+  //     .then((res) => res.json())
+  //     .then((data) => setCategories(data.items))
+  // }, [])
 
-  useEffect(() => {
-    fetch(
-      `/api/get-products-count?category=${selectedCategory}&contains=${debouncedKeyword}`
-    )
-      .then((res) => res.json())
-      .then((data) => setTotal(Math.ceil(data.items / TAKE)))
-  }, [selectedCategory, debouncedKeyword])
+  const { data: categories } = useQuery<
+    { items: categories[] },
+    unknown,
+    categories[]
+  >(
+    [`/api/get-categories`],
+    () => fetch(`/api/get-categories`).then((res) => res.json()),
+    { select: (data) => data.items }
+  )
+
+  // react-query 로 cache 를 사용하기위해 주석처리
+  // useEffect(() => {
+  //   fetch(
+  //     `/api/get-products-count?category=${selectedCategory}&contains=${debouncedKeyword}`
+  //   )
+  //     .then((res) => res.json())
+  //     .then((data) => setTotal(Math.ceil(data.items / TAKE)))
+  // }, [selectedCategory, debouncedKeyword])
+
+  const { data: total } = useQuery(
+    [
+      `/api/get-products-count?category=${selectedCategory}&contains=${debouncedKeyword}`,
+    ],
+    () =>
+      fetch(
+        `/api/get-products-count?category=${selectedCategory}&contains=${debouncedKeyword}`
+      )
+        .then((res) => res.json())
+        .then((data) => Math.ceil(data.items / TAKE))
+    // select를 쓰지 않고  fetch  에서 값을 넘김
+  )
 
   // react-query 로 cache 를 사용하기위해 주석처리
   // useEffect(() => {
@@ -133,12 +158,14 @@ export default function Products() {
         </div>
       )}
       <div className="w-full flex mt-5">
-        <Pagination
-          className="m-auto"
-          page={activePage}
-          onChange={setPage}
-          total={total}
-        />
+        {total && (
+          <Pagination
+            className="m-auto"
+            page={activePage}
+            onChange={setPage}
+            total={total}
+          />
+        )}
       </div>
     </div>
   )
