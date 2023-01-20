@@ -146,6 +146,11 @@ tanstack
 
 yarn add @tanstack/react-query
 
+
+구글 oauth 사용
+
+yarn add @react-oauth/google@latest
+
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
