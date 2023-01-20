@@ -151,6 +151,8 @@ yarn add @tanstack/react-query
 
 yarn add @react-oauth/google@latest
 
+yarn add jwt-decode
+
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
