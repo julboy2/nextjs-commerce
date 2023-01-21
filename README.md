@@ -175,6 +175,18 @@ DB NAME : commerce_database
 https://docs.planetscale.com/docs/tutorials/planetscale-quick-start-guide
 
 
+테이블생성
+
+1. prisma/schema.prisma 에서  
+
+model user {테이블생성후}
+
+2. https://app.planetscale.com/  접속후 새 branch 생성후 connect 주소를 .env 에 적는다. 
+
+3. yarn prisma db push 하면 
+prisma/schema.prisma 에서 만들었던 테이블이 planetscale 에 생성된다.
+
+
 TailwindCSS
 
 https://tailwindcss.com/docs/guides/nextjs
