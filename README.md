@@ -153,6 +153,16 @@ yarn add @react-oauth/google@latest
 
 yarn add jwt-decode
 
+
+로그인 
+
+next-auth 를 prisma 를 연결해서사용한다.
+
+
+yarn add next-auth @next-auth/prisma-adapter
+
+yarn add prisma --dev
+
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -190,6 +200,16 @@ prisma/schema.prisma 에서 만들었던 테이블이 planetscale 에 생성된�
 TailwindCSS
 
 https://tailwindcss.com/docs/guides/nextjs
+
+
+
+##로그인
+https://next-auth.js.org
+
+
+prisma 로 db 통신을 하고 있다.
+
+next-auth 도 prisma 로 연결해서 사용한다.
 
 
 ## Deploy on Vercel
