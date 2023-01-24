@@ -196,6 +196,10 @@ model user {테이블생성후}
 3. yarn prisma db push 하면 
 prisma/schema.prisma 에서 만들었던 테이블이 planetscale 에 생성된다.
 
+3-1. db 에 있는 스키마를 prisma 파일로 가져오려면
+
+> yarn prisma db pull --schema=./prisma/파일명.prisma
+
 
 TailwindCSS
 
