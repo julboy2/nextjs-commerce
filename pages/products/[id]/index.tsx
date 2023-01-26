@@ -9,6 +9,10 @@ import { GetServerSidePropsContext } from 'next'
 import { products } from '@prisma/client'
 import { format } from 'date-fns'
 import { CATEGORY_MAP } from 'constants/products'
+import { useQuery } from '@tanstack/react-query'
+import { Button } from '@mantine/core'
+import { IconHeart, IconHeartbeat } from '@tabler/icons'
+import { useSession } from 'next-auth/react'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   // server Side 는 http 포함 url 이어야됨
@@ -25,10 +29,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 }
 
+const WITHLIST_QUERY_KEY = '/api/get-wishlist'
+
 export default function Products(props: {
   product: products & { images: string[] }
 }) {
   const [index, setIndex] = useState(0)
+  const { data: session } = useSession()
+
   const router = useRouter()
   const { id: productId } = router.query
   const [editorState] = useState<EditorState | undefined>(() =>
@@ -39,7 +47,15 @@ export default function Products(props: {
       : EditorState.createEmpty()
   )
 
+  const { data: wishlist } = useQuery([WITHLIST_QUERY_KEY], () =>
+    fetch(WITHLIST_QUERY_KEY)
+      .then((res) => res.json())
+      .then((data) => data.items)
+  )
+
   const product = props.product
+
+  const isWished = wishlist ? wishlist.includes(productId) : false
 
   // useEffect(() => {
   //   if (productId != null) {
@@ -109,6 +125,29 @@ export default function Products(props: {
             <div className="text-lg">
               {product.price.toLocaleString('KO-KR')} 원
             </div>
+            <div>{wishlist}</div>
+            <Button
+              leftIcon={
+                isWished ? (
+                  <IconHeartbeat size={20} stroke={1.5} />
+                ) : (
+                  <IconHeart size={20} stroke={1.5} />
+                )
+              }
+              className={isWished ? 'bg-red-500' : 'bg-gray-500'}
+              radius="xl"
+              size="md"
+              styles={{ root: { paddingRight: 14, height: 48 } }}
+              onClick={() => {
+                if (session == null) {
+                  alert('로그인 해주세요')
+                  router.push('/auth/login')
+                  return
+                }
+              }}
+            >
+              찜하기
+            </Button>
             <div className="text-sm text-zinc-300">
               등록일자 {format(new Date(product.createdAt), 'yyyy년 M월 d일')}
             </div>
