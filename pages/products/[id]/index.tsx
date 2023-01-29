@@ -9,7 +9,7 @@ import { GetServerSidePropsContext } from 'next'
 import { products } from '@prisma/client'
 import { format } from 'date-fns'
 import { CATEGORY_MAP } from 'constants/products'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { Button } from '@mantine/core'
 import { IconHeart, IconHeartbeat } from '@tabler/icons'
 import { useSession } from 'next-auth/react'
@@ -51,6 +51,15 @@ export default function Products(props: {
     fetch(WITHLIST_QUERY_KEY)
       .then((res) => res.json())
       .then((data) => data.items)
+  )
+
+  const { mutate } = useMutation((productId) =>
+    fetch(`/api/update-wishlist`, {
+      method: 'POST',
+      body: JSON.stringify({ productId }),
+    })
+      .then((data) => data.json())
+      .then((res) => res.items)
   )
 
   const product = props.product
@@ -144,6 +153,7 @@ export default function Products(props: {
                   router.push('/auth/login')
                   return
                 }
+                mutate(String(productId))
               }}
             >
               찜하기
