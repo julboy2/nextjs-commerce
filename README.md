@@ -224,7 +224,7 @@ next-auth 도 prisma 로 연결해서 사용한다.
 ## react-query 기능
 1. 업데이트한 내역이 바로 반영될 수 있도록 하기 
 
-Optimistic updates
+Optimistic updates : 요청시 성공을 했을거라고 예측하고 화면을 업데이트한다.
 
 (https://tanstack.com/query/v4/docs/guides/optimistic-updates)
 
