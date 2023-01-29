@@ -220,6 +220,15 @@ prisma 로 db 통신을 하고 있다.
 next-auth 도 prisma 로 연결해서 사용한다.
 
 
+
+## react-query 기능
+1. 업데이트한 내역이 바로 반영될 수 있도록 하기 
+
+Optimistic updates
+
+(https://tanstack.com/query/v4/docs/guides/optimistic-updates)
+
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
