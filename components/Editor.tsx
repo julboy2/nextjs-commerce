@@ -28,7 +28,7 @@ export default function CustomEditor({
     <Wrapper>
       <Editor
         readOnly={readOnly}
-        editorState={editorState}
+        //editorState={editorState}
         toolbarHidden={readOnly}
         wrapperClassName="wrapper-class"
         toolbarClassName="editorToolbar-hidden"

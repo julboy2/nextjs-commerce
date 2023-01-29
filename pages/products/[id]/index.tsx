@@ -9,7 +9,7 @@ import { GetServerSidePropsContext } from 'next'
 import { products } from '@prisma/client'
 import { format } from 'date-fns'
 import { CATEGORY_MAP } from 'constants/products'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button } from '@mantine/core'
 import { IconHeart, IconHeartbeat } from '@tabler/icons'
 import { useSession } from 'next-auth/react'
@@ -38,6 +38,8 @@ export default function Products(props: {
   const { data: session } = useSession()
 
   const router = useRouter()
+  const queryClient = useQueryClient()
+
   const { id: productId } = router.query
   const [editorState] = useState<EditorState | undefined>(() =>
     props.product.contents
@@ -53,18 +55,51 @@ export default function Products(props: {
       .then((data) => data.items)
   )
 
-  const { mutate } = useMutation((productId) =>
-    fetch(`/api/update-wishlist`, {
-      method: 'POST',
-      body: JSON.stringify({ productId }),
-    })
-      .then((data) => data.json())
-      .then((res) => res.items)
+  const { mutate, isLoading } = useMutation<unknown, unknown, string, any>(
+    (productId) =>
+      fetch(`/api/update-wishlist`, {
+        method: 'POST',
+        body: JSON.stringify({ productId }),
+      })
+        .then((data) => data.json())
+        .then((res) => res.items),
+    {
+      // onMutate 는 mutation  함수가 실행되기 전에 실행된다.
+      // mutation 함수가 받을 동일한 변수가 전달된다.
+      onMutate: async (productId) => {
+        //Optimistic updates : 요청시 성공을 했을거라고 예측하고 화면을 업데이트한다.
+        await queryClient.cancelQueries([WITHLIST_QUERY_KEY])
+
+        // Snapshot the previous value
+        const previous = queryClient.getQueryData([WITHLIST_QUERY_KEY])
+
+        // Optimistically update to the new value
+        queryClient.setQueryData<string[]>([WITHLIST_QUERY_KEY], (old) =>
+          old
+            ? old.includes(String(productId))
+              ? old.filter((id) => id !== String(productId))
+              : old.concat(String(productId))
+            : []
+        )
+
+        // Return a context object with the snapshotted value
+        return { previous }
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData([WITHLIST_QUERY_KEY], context.previousTodos)
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries([WITHLIST_QUERY_KEY])
+      },
+    }
   )
 
   const product = props.product
 
-  const isWished = wishlist ? wishlist.includes(productId) : false
+  const isWished =
+    wishlist != null && productId != null
+      ? wishlist.includes(String(productId))
+      : false
 
   // useEffect(() => {
   //   if (productId != null) {
@@ -136,11 +171,13 @@ export default function Products(props: {
             </div>
             <div>{wishlist}</div>
             <Button
+              //loading={isLoading}
+              disabled={wishlist == null}
               leftIcon={
                 isWished ? (
-                  <IconHeartbeat size={20} stroke={1.5} />
-                ) : (
                   <IconHeart size={20} stroke={1.5} />
+                ) : (
+                  <IconHeartbeat size={20} stroke={1.5} />
                 )
               }
               className={isWished ? 'bg-red-500' : 'bg-gray-500'}
