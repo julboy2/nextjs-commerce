@@ -229,6 +229,14 @@ Optimistic updates : 요청시 성공을 했을거라고 예측하고 화면을 
 (https://tanstack.com/query/v4/docs/guides/optimistic-updates)
 
 
+## Form 태크
+1. Input
+
+https://ui.mantine.dev/category/inputs
+
+
+
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
