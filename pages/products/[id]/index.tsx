@@ -6,7 +6,7 @@ import CustomEditor from '@components/Editor'
 import { useRouter } from 'next/router'
 import { convertFromRaw, convertToRaw, EditorState } from 'draft-js'
 import { GetServerSidePropsContext } from 'next'
-import { products } from '@prisma/client'
+import { Cart, products } from '@prisma/client'
 import { format } from 'date-fns'
 import { CATEGORY_MAP } from 'constants/products'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -97,18 +97,34 @@ export default function Products(props: {
     }
   )
 
-  const validate = (type: 'cart' | 'order') => {
+  const { mutate: addCart } = useMutation<
+    unknown,
+    unknown,
+    Omit<Cart, 'id' | 'userId'>,
+    any
+  >((item) =>
+    fetch(`/api/add-cart`, {
+      method: 'POST',
+      body: JSON.stringify({ item }),
+    })
+      .then((data) => data.json())
+      .then((res) => res.items)
+  )
+
+  const product = props.product
+  const validate = async (type: 'cart' | 'order') => {
     if (quantity == null) {
       alert('최소 수량을 입력하세요')
       return
     }
 
-    // todo 장바구니에 등록하는 기능 추가
-
+    await addCart({
+      productId: product.id,
+      quantity: quantity,
+      amount: product.price * quantity,
+    })
     router.push('/cart')
   }
-
-  const product = props.product
 
   const isWished =
     wishlist != null && productId != null

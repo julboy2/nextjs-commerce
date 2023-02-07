@@ -1,7 +1,7 @@
 import { CountControl } from '@components/CountControl'
 import styled from '@emotion/styled'
 import { Button } from '@mantine/core'
-import { products } from '@prisma/client'
+import { Cart, products } from '@prisma/client'
 import { IconRefresh, IconX } from '@tabler/icons'
 import { useQuery } from '@tanstack/react-query'
 import { CATEGORY_MAP } from 'constants/products'
@@ -9,50 +9,37 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useEffect, useMemo, useState } from 'react'
 
-interface CartItem {
+interface CartItem extends Cart {
   name: string
-  productId: number
   price: number
-  quantity: number
-  amount: number
   image_url: string
 }
 
-export default function Cart() {
+export default function CartPage() {
   const router = useRouter()
-  const [data, setData] = useState<CartItem[]>([])
 
-  const deliveryAmount = 5000
+  const { data } = useQuery<{ items: CartItem[] }, unknown, CartItem[]>(
+    [`/api/get-cart`],
+    () =>
+      fetch(`/api/get-cart`)
+        .then((res) => res.json())
+        .then((data) => data.items)
+    // {
+    //   select: (data) => data.items,
+    // }
+  )
+
+  const deliveryAmount = data && data.length > 0 ? 5000 : 0
   const discountAmount = 0
 
   const amount = useMemo(() => {
+    if (data == null) {
+      return 0
+    }
     return data
       .map((item) => item.amount)
       .reduce((prev, curr) => prev + curr, 0)
   }, [data])
-
-  useEffect(() => {
-    const mockData = [
-      {
-        name: '곰',
-        productId: 100,
-        price: 10000,
-        quantity: 2,
-        amount: 20000,
-        image_url: 'https://picsum.photos/id/1020/1000/600/',
-      },
-      {
-        name: '바다괴물',
-        productId: 84,
-        price: 25000,
-        quantity: 1,
-        amount: 25000,
-        image_url: 'https://picsum.photos/id/1084/1000/600/',
-      },
-    ]
-
-    setData(mockData)
-  }, [])
 
   const { data: products } = useQuery<
     { items: products[] },
@@ -73,10 +60,10 @@ export default function Cart() {
 
   return (
     <div style={{ width: '600px' }}>
-      <span>cart {data.length}</span>
+      <span>cart {data ? data.length : 0}</span>
       <div className="flex ">
         <div className="flex flex-col p-4 space-y-4 flex-1">
-          {data?.length > 0 ? (
+          {data && data.length > 0 ? (
             data.map((item, idx) => <Item key={idx} {...item} />)
           ) : (
             <div>장바구니에 아무것도 없습니다.</div>

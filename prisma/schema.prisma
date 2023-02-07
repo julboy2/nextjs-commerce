@@ -86,7 +86,7 @@ model Wishlist {
 model Cart {
   id        Int     @unique(map: "Cart_id") @default(autoincrement())
   userId    String?
-  productId String
+  productId Int?
   quantity  Int
   amount    Int
 }
