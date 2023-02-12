@@ -15,6 +15,7 @@ import { IconHeart, IconHeartbeat, IconShoppingCart } from '@tabler/icons'
 import { useSession } from 'next-auth/react'
 import { validateConfig } from 'next/dist/server/config-shared'
 import { CountControl } from '@components/CountControl'
+import { CART_QUERY_KEY } from 'pages/cart'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   // server Side 는 http 포함 url 이어야됨
@@ -102,28 +103,39 @@ export default function Products(props: {
     unknown,
     Omit<Cart, 'id' | 'userId'>,
     any
-  >((item) =>
-    fetch(`/api/add-cart`, {
-      method: 'POST',
-      body: JSON.stringify({ item }),
-    })
-      .then((data) => data.json())
-      .then((res) => res.items)
+  >(
+    (item) =>
+      fetch(`/api/add-cart`, {
+        method: 'POST',
+        body: JSON.stringify({ item }),
+      })
+        .then((data) => data.json())
+        .then((res) => res.items),
+
+    {
+      onMutate: () => {
+        queryClient.invalidateQueries([CART_QUERY_KEY])
+      },
+      onSuccess: () => {
+        router.push('/cart')
+      },
+    }
   )
 
   const product = props.product
-  const validate = async (type: 'cart' | 'order') => {
+  const validate = (type: 'cart' | 'order') => {
     if (quantity == null) {
       alert('최소 수량을 입력하세요')
       return
     }
 
-    await addCart({
-      productId: product.id,
-      quantity: quantity,
-      amount: product.price * quantity,
-    })
-    router.push('/cart')
+    if (type === 'cart') {
+      addCart({
+        productId: product.id,
+        quantity: quantity,
+        amount: product.price * quantity,
+      })
+    }
   }
 
   const isWished =
