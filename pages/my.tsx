@@ -86,10 +86,17 @@ const DetailItem = (props: OrderDetail) => {
         .then((res) => res.items),
     {
       onMutate: async (status) => {
+        // 전체적인내용 Optimistic updates : 요청시 성공을 했을거라고
+
+        //1. 만약WITHLIST_QUERY_KEY 해당키로 다른작업중이면 작업 중지함
         await queryClient.cancelQueries([ORDER_QUERY_KEY])
 
+        //2. 수정전의 현재 값을 가져옴
         const previous = queryClient.getQueryData([ORDER_QUERY_KEY])
 
+        //3. 성공했다는 가정하에 해당 값을 먼저 조작한다.
+        //3.1 먼저 데이터를 조작하는 이유는 화면(버튼)에 딜레이가 생기는 것을 방지
+        //3.2 화면(버튼) 이먼저 성공한것처럼 변하고 다음에 데이터가 수정된다.
         queryClient.setQueriesData<Cart[]>([ORDER_QUERY_KEY], (old) =>
           old?.map((c) => {
             if (c.id === props.id) {
@@ -102,6 +109,7 @@ const DetailItem = (props: OrderDetail) => {
         return { previous }
       },
       onError: (error, _, context) => {
+        // 에러일경우 위에 2의 previous 를 가져온다.
         queryClient.setQueriesData([ORDER_QUERY_KEY], context.previous)
       },
       onSuccess: () => {
