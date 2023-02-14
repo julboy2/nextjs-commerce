@@ -91,21 +91,21 @@ model Cart {
   amount    Int
 }
 
-model OrderItem{
- id        Int     @id @default(autoincrement())
+model OrderItem {
+  id        Int  @id @default(autoincrement())
   productId Int?
   quantity  Int
-  price Int
-  amount    Int 
+  price     Int
+  amount    Int
 }
 
-model Orders{
-  id Int @id @default(autoincrement())
-  userId String
+model Orders {
+  id           Int      @id @default(autoincrement())
+  userId       String
   orderItemIds String
-  receiver String?
-  address String?
-  phoneNumber String?
-  createAt DateTime @default(now())
+  receiver     String?
+  address      String?
+  phoneNumber  String?
   status Int
+  createAt     DateTime @default(now())
 }
