@@ -11,7 +11,6 @@ async function getProduct(id: number) {
         id,
       },
     })
-    console.log('ok')
     console.log(response)
     return response
   } catch (error) {
