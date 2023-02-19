@@ -17,6 +17,7 @@ import { validateConfig } from 'next/dist/server/config-shared'
 import { CountControl } from '@components/CountControl'
 import { CART_QUERY_KEY } from 'pages/cart'
 import { ORDER_QUERY_KEY } from 'pages/my'
+import CommentItem from '@components/CommentItem'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   // server Side 는 http 포함 url 이어야됨
@@ -26,17 +27,27 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     .then((res) => res.json())
     .then((data) => data.items)
 
+  const comments = await fetch(
+    `http://localhost:3000/api/get-comments?productId=${context.params?.id}`
+  )
+    .then((res) => res.json())
+    .then((data) => data.items)
+
   return {
     props: {
       product: { ...product, images: [product.image_url, product.image_url] },
+      comments: comments,
     },
   }
 }
 
 const WITHLIST_QUERY_KEY = '/api/get-wishlist'
 
+export interface CommentITemType extends Comment, OrderItem {}
+
 export default function Products(props: {
   product: products & { images: string[] }
+  comments: CommentITemType[]
 }) {
   const [index, setIndex] = useState(0)
   const { data: session } = useSession()
@@ -238,6 +249,13 @@ export default function Products(props: {
             {editorState != null && (
               <CustomEditor editorState={editorState} readOnly />
             )}
+            <div>
+              <p className="text-2xl font-semibold">후기</p>
+              {props.comments &&
+                props.comments.map((comment, idx) => (
+                  <CommentItem key={idx} item={comment} />
+                ))}
+            </div>
           </div>
           <div className="max-w-xl flex flex-col space-y-6">
             <div className="text-lg text-zinc-400">
