@@ -9,7 +9,7 @@ import { authOptions } from './auth/[...nextauth]'
 const prisma = new PrismaClient()
 
 // Omit 이란  <Cart, 'id' | 'userId'> 여기서 Cart 에 있는 model (컬럼) 중에  id와 userID 는 빼겠다
-async function addCart(userId: string, item: Omit<Cart, 'id' | 'userId'>) {
+async function addCart(userId: string, item: Omit<Cart, 'userId'>) {
   try {
     const response = await prisma.cart.create({
       data: {
