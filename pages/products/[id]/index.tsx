@@ -43,7 +43,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
 const WITHLIST_QUERY_KEY = '/api/get-wishlist'
 
-export interface CommentITemType extends Comment, OrderItem {}
+export interface CommentITemType extends Comment, OrderItem {
+  images: string
+  contents: string
+  updatedAt: string | number | Date
+  //  배포시 에러나서추가
+  rate: number
+}
 
 export default function Products(props: {
   product: products & { images: string[] }

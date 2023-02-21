@@ -37,8 +37,20 @@ const ImageUpload = () => {
     <div>
       <input ref={inputRef} type="file" accept="image/*" />
       <Button onClick={handleUpload}>업로드</Button>
+
+      {
+        <AutoSizeImageWrapper>
+          <Image src={image} alt="" layout="fill" objectFit="contain" />
+        </AutoSizeImageWrapper>
+      }
     </div>
   )
 }
 
 export default ImageUpload
+
+const AutoSizeImageWrapper = styled.div`
+  width: 500px;
+  height: 500px;
+  position: relative;
+`
