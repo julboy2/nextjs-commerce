@@ -26,9 +26,9 @@ const CommentItem = ({ item }: { item: CommentITemType }) => {
               {item.amount.toLocaleString('ko-kr')} 원
             </span>
           </div>
-          {/* <p className="text-zinc-300 ml-auto">
-          {format(new Date(item.updatedAt), 'yyyy년 M월 d일')}
-        </p> */}
+          <p className="text-zinc-300 ml-auto">
+            {format(new Date(item.updatedAt), 'yyyy년 M월 d일')}
+          </p>
         </div>
         {/* <CustomEditor
           editorState={EditorState.createWithContent(
