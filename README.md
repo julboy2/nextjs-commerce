@@ -234,7 +234,9 @@ Optimistic updates : 요청시 성공을 했을거라고 예측하고 화면을 
 
 https://ui.mantine.dev/category/inputs
 
+2. 이미지 무료 업로드 ()
 
+https://imgbb.com
 
 
 ## Deploy on Vercel
